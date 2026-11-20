@@ -1,0 +1,18 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const essays = (await getCollection('essays')).sort((a, b) => a.data.number - b.data.number);
+---
+<Base title="Essays">
+  <div class="column">
+    <h1>Essays</h1>
+    <p class="meta">Each essay leans on an experiment for its evidence. Where the experiment has not run yet, the essay says so.</p>
+    {essays.map((e) => (
+      <section>
+        <h2><a href={`${base}/essays/${e.id}/`}>{e.data.number}. {e.data.title}</a></h2>
+        <p>{e.data.summary}</p>
+      </section>
+    ))}
+  </div>
+</Base>

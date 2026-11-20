@@ -1,0 +1,45 @@
+---
+title: Insider purchases
+code: C
+question: When several insiders buy their own company's stock, does it beat the market over the next month?
+claim: Forecast
+status: Draft
+spec: specs/C-insider-purchases.yaml
+verdict: Not yet run
+---
+
+## Question
+
+Company officers and directors must report their trades to the SEC within two business days. When two or more of them buy shares on the open market within 30 days, does the stock do better than the market over the following 20 trading days, after trading costs?
+
+## Price
+
+For a stock, the benchmark is the market itself: the forecast to beat is a return equal to the market's.
+
+## Reason
+
+Insiders know more about their own company than outside investors do. Many insider purchases are routine and carry little information. Purchases that break an insider's usual pattern may carry more. Earlier academic work has found both effects; this experiment checks whether they hold in recent data with realistic timing and costs.
+
+## Timing
+
+Each cluster is dated by the SEC acceptance timestamp of the filing that completes it, and the simulated entry is the next market open. That is the earliest moment a public investor could have acted.
+
+## Mechanism
+
+Insider buying is not randomly assigned. Insiders choose when to buy, often for reasons that also affect the stock. So this is a forecasting result, not a causal one. A causal forest is used only to describe which kinds of purchases are followed by larger returns.
+
+## Forecast
+
+Four forecasts: zero excess return, the average excess return of all clusters in earlier years, the average by insider role and by whether the purchase was routine, and a causal forest using the same information.
+
+## Test
+
+The full specification is in [the pre-registration](https://github.com/tylerdial1818/tyler-trade-lab/blob/main/specs/C-insider-purchases.yaml). Clusters from 2010 to 2019 are used to explore; clusters from 2020 to mid-2026 are examined once. Detecting a 1 percent excess return needs about 620 clusters in the test period.
+
+## Result
+
+Not yet run.
+
+## Limitations
+
+A fair test needs price data that includes companies that were later delisted. Free sources usually leave them out, which makes small-company results look better than they were. The price source used will be named here, along with the size of this bias where it can be estimated.

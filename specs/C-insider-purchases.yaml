@@ -1,0 +1,46 @@
+id: C
+title: Insider purchases
+status: draft
+claim: Forecast
+question: >
+  When two or more insiders at the same company buy shares on the open market within 30
+  days, does the stock beat the market over the next 20 trading days?
+hypothesis: >
+  Clustered open-market purchases predict positive market-adjusted returns over 20 trading
+  days, after an estimated trading cost, and the effect is stronger for purchases that break
+  an insider's usual trading pattern.
+reason: >
+  Insiders know more about their company than outside investors. Routine purchases carry
+  little information; unusual ones may carry more.
+data:
+  filings: SEC EDGAR Form 4, transaction code P, with the filing acceptance timestamp.
+  prices: Daily adjusted prices. A source that includes delisted companies is required for an unbiased test.
+  rights: EDGAR data is public. The price source's terms must permit the use.
+  cluster: At least two distinct reporting owners, each buying at least $25,000, within 30 calendar days.
+  entry: Next market open after the acceptance time of the filing that completes the cluster.
+  unit_of_analysis: Company-cluster. Clusters closer than 30 days in the same company are merged.
+split:
+  exploration: Clusters completed 2010-01-01 to 2019-12-31.
+  test: Clusters completed 2020-01-01 to 2026-06-30.
+models:
+  - Market return alone (zero abnormal return).
+  - Mean abnormal return of all clusters in the exploration period.
+  - Abnormal return conditional on insider role and whether the purchase was routine.
+  - A causal forest using the same covariates, reported as a description of where the effect is larger.
+metrics:
+  primary: Mean 20-day return minus the market return, minus an estimated round-trip cost by size bucket, clustered by month.
+  secondary:
+    - The same at 5 and 60 trading days.
+    - Results excluding the 10 largest contributors.
+test: One-sided, month-clustered bootstrap, 95 percent level.
+power: >
+  20-day abnormal return standard deviation about 10 percent. To detect 1 percent needs
+  about 620 clusters in the test period.
+outcomes:
+  positive: Lower bound of the interval on the primary metric is above zero in the test period.
+  null: At least 620 test clusters and the interval excludes 1 percent.
+  inconclusive: Fewer than 620 test clusters.
+  killed: No affordable price source covering delisted companies.
+limits: >
+  Insider buying is not randomly assigned, so the result is predictive, not causal. Without
+  delisted companies the test overstates returns for small firms.
