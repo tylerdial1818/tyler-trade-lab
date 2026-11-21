@@ -14,8 +14,14 @@ reason: >
   little information; unusual ones may carry more.
 data:
   filings: SEC EDGAR Form 4, transaction code P, with the filing acceptance timestamp.
-  prices: Daily adjusted prices. A source that includes delisted companies is required for an unbiased test.
-  rights: EDGAR data is public. The price source's terms must permit the use.
+  prices: >
+    Primary: free daily adjusted prices (Stooq), which mostly omit companies that were later
+    delisted. Robustness: CRSP via WRDS if Northwestern access is confirmed, which includes
+    delisting returns.
+  survivorship: >
+    Clusters whose company has no price history at entry are counted and reported, not
+    silently dropped. The share of clusters lost this way is the main measure of the bias.
+  rights: EDGAR data is public. Stooq and WRDS terms must permit the use before collection.
   cluster: At least two distinct reporting owners, each buying at least $25,000, within 30 calendar days.
   entry: Next market open after the acceptance time of the filing that completes the cluster.
   unit_of_analysis: Company-cluster. Clusters closer than 30 days in the same company are merged.
@@ -40,7 +46,8 @@ outcomes:
   positive: Lower bound of the interval on the primary metric is above zero in the test period.
   null: At least 620 test clusters and the interval excludes 1 percent.
   inconclusive: Fewer than 620 test clusters.
-  killed: No affordable price source covering delisted companies.
+  killed: More than 25 percent of test clusters have no price history at entry.
 limits: >
-  Insider buying is not randomly assigned, so the result is predictive, not causal. Without
-  delisted companies the test overstates returns for small firms.
+  Insider buying is not randomly assigned, so the result is predictive, not causal. The free
+  price source leaves out most delisted companies, which biases returns upward, most for
+  small firms. The primary result is reported with that caveat until the CRSP check is run.
