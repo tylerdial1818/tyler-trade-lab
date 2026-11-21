@@ -1,0 +1,24 @@
+---
+layout: ../layouts/Prose.astro
+title: About
+description: Who writes this site and how it is built.
+meta: Drafted 2026-11-20
+---
+
+Tyler Trade Labs is written by Tyler Dial. More of my work is at [tylerdial.dev](https://tylerdial.dev) and through Dialed Intelligence.
+
+## Why this exists
+
+I studied data science at Northwestern, and the questions that stayed with me were less about models than about limits. How much of the world can be predicted at all? How do you tell a real signal from a lucky one? When does better data matter more than a better method? Prediction markets are a good place to test those questions, because every forecast is eventually graded by what actually happens.
+
+I am also skeptical of speculative finance as an industry. This site does not resolve that tension. It uses markets as a laboratory, and it publishes what it finds, including the many things that do not work.
+
+## How it is built
+
+The research code is a Python package in the [public repository](https://github.com/tylerdial1818/tyler-trade-lab). It can read market data but cannot place orders. Each experiment is specified in a file committed before the test data is examined, and every forecast is written to a ledger whose entries are chained by hash, so earlier entries cannot be changed without it showing.
+
+The site is built with Astro. Text is set in Source Serif 4, with IBM Plex Sans and Plex Mono for labels and numbers.
+
+## Data
+
+Market data comes from Kalshi's public API. Company filings come from SEC EDGAR. Unemployment claims come from the U.S. Department of Labor and the Federal Reserve Bank of St. Louis. Raw market data is not redistributed here; the site shows summaries and charts.

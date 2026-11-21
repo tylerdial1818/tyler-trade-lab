@@ -1,0 +1,51 @@
+---
+title: Two kinds of uncertainty
+number: 2
+summary: Some uncertainty shrinks with more data and some does not. Knowing which one you face decides how far data science can take you.
+drafted: 2026-11-20
+status: draft
+---
+import Note from '../../components/Note.astro';
+import Pending from '../../components/Pending.astro';
+
+If I flip a fair coin, I cannot tell you how it will land, and no amount of data will change that. If I put a coin in an envelope and ask which side is up, you also cannot tell me, but the answer already exists and a quick look would settle it. Both are uncertain. Only one of them can be fixed with more information.
+
+Statisticians call the first kind aleatory uncertainty, from the Latin for dice. It is randomness in the process itself. The second is epistemic uncertainty, from the Greek for knowledge. It is a gap in what you know about something that is already determined. The distinction sounds academic, but it decides how much any amount of data can help.
+
+## Why it matters for forecasting
+
+Every forecast error is some mix of the two. Collecting more data, building better features and fitting better models can only shrink the epistemic part. The aleatory part sets a floor. Below that floor, a model that seems to be improving is fitting noise.
+
+Most of the practical damage in data science comes from not knowing where the floor is. A team adds variables, the error on historical data keeps falling, and nobody notices that they have passed the point where there was anything left to learn. The model then does worse on new data than a simpler one would have.
+
+The honest response to aleatory uncertainty is not a better point forecast. It is a well-calibrated probability. If an outcome is genuinely a coin flip, the best forecast is 50 percent, and saying 50 percent is not a failure of the model.
+
+## An example: weekly jobless claims
+
+Every Thursday morning the Department of Labor reports how many people filed a first claim for unemployment insurance the week before. Kalshi lists contracts on the number. It is a good test case because a lot of the uncertainty about it looks epistemic. The layoffs that drive claims have already happened by the time the market trades. Some of them are even announced in advance, through WARN notices that larger employers must file before mass layoffs.
+
+But some of it is aleatory, or close enough. Not everyone who is laid off files a claim, and the share who do changes with the season, the state and the news. Holidays move filings from one week to another. The headline number is seasonally adjusted, and the adjustment factors carry their own error. Even someone who knew every layoff in the country could not predict the reported figure exactly.
+
+So the useful question is not "can I predict claims?" It is "how much of the error goes away as I add each piece of information, and where does it stop going away?"
+
+<Pending experiment="B">
+How much of the forecast error for weekly claims remains after adding, in turn, last week's number, seasonal patterns, and layoff notices, and how that compares with the error of the market's own forecast just before the release.
+</Pending>
+
+## The third kind
+
+There is a further kind of uncertainty that neither more data nor better calibration fixes. Frank Knight separated risk, where the odds can be known, from uncertainty, where they cannot.<Note>Frank Knight, *Risk, Uncertainty and Profit*, 1921. Knight's distinction is not the same as the aleatory and epistemic one, though the two are often mixed up.</Note> A coin flip is risk. Whether a new law will change who files for unemployment next year is closer to Knight's uncertainty: there is no history to estimate the odds from, because the situation has not happened before.
+
+Markets add a twist of their own. Part of what you are uncertain about is what other traders will do, and they are uncertain about you. John Maynard Keynes compared this to a newspaper contest where readers win by picking the faces other readers will pick, so each reader is guessing at everyone else's guesses.<Note>John Maynard Keynes, *The General Theory of Employment, Interest and Money*, 1936, chapter 12.</Note> For a contract that pays out on a government statistic, this matters less, because the final payout does not depend on anyone's opinion. For anything that pays out on prices, it matters a great deal.
+
+## What this says about the limits of data science
+
+Data science is very good at shrinking epistemic uncertainty when the world holds still long enough to learn from it. It has nothing to say about aleatory uncertainty except how big it is. And it is often worse than useless under Knight's kind, because a model trained on the past reports its estimates with a confidence the future has not earned.
+
+I take three rules from this for the experiments on this site:
+
+1. Estimate the floor before trying to beat it. If the market's forecast error is already close to what I think the irreducible error is, there is no room left, whatever model I use.
+2. Judge forecasts by calibration, not by how often they were right. A 60 percent forecast is supposed to be wrong 40 percent of the time.
+3. Treat any period that does not look like the past as a reason to trust the model less, not more.
+
+None of this is new. What I want to show is what it looks like when you measure it on real questions, with real data and a real market forecast to compare against.

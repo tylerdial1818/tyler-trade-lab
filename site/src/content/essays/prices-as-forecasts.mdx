@@ -1,0 +1,55 @@
+---
+title: Prices as forecasts
+number: 1
+summary: What a market price already knows, why it cannot know everything, and where the gap is likely to be.
+drafted: 2026-11-20
+status: draft
+---
+import Note from '../../components/Note.astro';
+import Pending from '../../components/Pending.astro';
+
+Suppose a Kalshi contract asks whether next Thursday's initial jobless claims will come in above 230,000, and the YES side trades at 14 cents. The contract pays a dollar if the answer is yes. Anyone willing to pay 14 cents for it thinks the chance is at least 14 percent, and anyone willing to sell at 14 cents thinks it is at most that. The price is a forecast, written by everyone who chose to trade.
+
+Most of this site is about one question: when can I do better than that forecast? Before trying, it is worth asking how good the forecast is likely to be, and why.
+
+## The case for the price
+
+The strongest argument for market prices is old. Friedrich Hayek pointed out that the knowledge needed to run an economy never exists in one place.<Note>F. A. Hayek, "The Use of Knowledge in Society," *American Economic Review* 35(4), 1945.</Note> It is spread across millions of people, each of whom knows something small and local. A price gathers those pieces without anyone having to collect them. A trader who knows something the price does not has a reason to trade, and trading moves the price toward what they know.
+
+Eugene Fama turned this into a testable claim: in an efficient market, prices fully reflect available information, so no strategy based on that information should earn more than a fair return for its risk.<Note>Eugene Fama, "Efficient Capital Markets: A Review of Theory and Empirical Work," *Journal of Finance* 25(2), 1970.</Note> Decades of research have argued about how strong that claim is. The weak version, that past prices alone do not predict future returns in a useful way, has held up well. Prediction markets have their own record. Long-running markets such as the Iowa Electronic Markets have often matched or beaten opinion polls on election outcomes.
+
+If I take this seriously, the default assumption for any contract on this site is that the price is roughly right, and that my model is wrong until it proves otherwise.
+
+## Why the price cannot be perfect
+
+There is a flaw in the strong version of the argument, and it was pointed out by Sanford Grossman and Joseph Stiglitz.<Note>Sanford Grossman and Joseph Stiglitz, "On the Impossibility of Informationally Efficient Markets," *American Economic Review* 70(3), 1980.</Note> Gathering information costs time and money. If prices already reflected everything, nobody could earn anything by gathering it, so nobody would. Then the information would never reach the price. A market can only be informative if it is slightly uninformative, by roughly enough to pay the people who do the work of informing it.
+
+I find this the most useful idea in the whole debate. It says the gap between the price and the truth is not zero, and it says roughly how big it should be: about as big as the cost of closing it. In a large, liquid market with many well-funded participants, that cost is spread thin and the gap is tiny. In a small market that nobody large bothers with, the gap can stay open, because closing it does not pay enough for anyone who could.
+
+## Known distortions
+
+Prices also differ from probabilities for reasons that have nothing to do with information.
+
+The best documented is the favorite-longshot bias. At the racetrack, bettors have long overpaid for horses with small chances of winning and underpaid for favorites, so a dollar bet on a long shot loses more on average than a dollar bet on a favorite.<Note>Richard Thaler and William Ziemba, "Anomalies: Parimutuel Betting Markets: Racetracks and Lotteries," *Journal of Economic Perspectives* 2(2), 1988, reviews the evidence.</Note> One explanation is that people enjoy the chance of a large payout and pay a premium for it. Another is that they overweight small probabilities. Either way, the price of a long shot is a forecast with a thumb on the scale.
+
+Fees add a second distortion. Kalshi's fee depends on the contract price, and on cheap contracts it can be a large share of what you pay. A contract that looks underpriced before the fee may not be after it.
+
+Thin trading adds a third. When only a handful of people trade a contract, the price reflects who happened to be there, not a crowd.
+
+<Pending experiment="A">
+Calibration of Kalshi prices across settled markets, grouped by price: how often do 10-cent contracts pay out, how often do 90-cent contracts pay out, and how much of the difference survives fees.
+</Pending>
+
+## Where to look
+
+Put together, this gives a rough map of where a gap between price and truth might exist and where it almost certainly does not.
+
+It almost certainly does not exist in large, heavily traded markets where professional firms compete. The S&P 500 is the obvious example. If there is a simple, public signal there, someone with more resources than me has already traded it away.
+
+It might exist where the market is too small for professionals to care, where a known bias persists because correcting it does not pay enough, or where public information arrives on a schedule and the market is slow to absorb it. Those are the three places the experiments on this site look.
+
+It is worth being clear about what that means. Even if I find a gap, it will be small in dollars. A contract with a few thousand dollars of depth cannot make anyone rich. For this project that is fine. The question is whether the gap exists and what it says about how markets process information, not how much money it can make.
+
+## What this means for the rest of the site
+
+Every experiment starts by reading the price as a forecast and treating it as the benchmark. A model that cannot beat it has not learned anything new. A model that beats it on historical data still has to show that the advantage survives fees, delays and the size actually available to trade. Most will not. When one does, the interesting part is not the profit, but what it says about where the market's knowledge runs out.

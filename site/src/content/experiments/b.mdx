@@ -1,0 +1,45 @@
+---
+title: Weekly jobless claims
+code: B
+question: Can public data beat Kalshi's price on weekly jobless claims, and how fast does the price absorb the release?
+claim: Market response
+status: Draft
+spec: specs/B-jobless-claims.yaml
+verdict: Not yet run
+---
+
+## Question
+
+Two questions about one weekly number. First, can information that is public before 8:30 a.m. Eastern on Thursday forecast initial jobless claims better than the Kalshi price? Second, when the number comes out, how quickly does the price move, and does it move far enough?
+
+## Price
+
+The benchmark is the market midpoint 60 minutes before the release.
+
+## Reason
+
+Layoffs happen before people file claims, and some are announced in advance through state layoff notices. If the market does not use that information, a forecast that does should be more accurate.
+
+## Timing
+
+The outcome is the first number the Department of Labor reports, not the revised figure published a week later. Every input is dated by when it became public. See [Two kinds of uncertainty](../../essays/two-kinds-of-uncertainty/) for why some of the error will remain whatever data is added.
+
+## Mechanism
+
+The release time is fixed weeks in advance. That makes the second question a clean event study: the timing of the news is not caused by anything happening in the market, so the price change can be compared with the size of the surprise. Thursdays without a release serve as placebo dates.
+
+## Forecast
+
+Four forecasts: the market price, a simple model using last week's number and seasonal patterns, the same model with layoff notices added, and a regularized model with the same inputs.
+
+## Test
+
+The full specification is in [the pre-registration](https://github.com/tylerdial1818/tyler-trade-lab/blob/main/specs/B-jobless-claims.yaml). With about 52 releases a year, the test can detect a large forecasting improvement or a clear price response. It cannot support any claim about trading profit, and it does not make one.
+
+## Result
+
+Not yet run.
+
+## Limitations
+
+The price response needs order books recorded minute by minute around each release. That recording starts when this experiment starts, so the response result will grow one week at a time.

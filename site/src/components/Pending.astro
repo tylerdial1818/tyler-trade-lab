@@ -1,0 +1,10 @@
+---
+// Marks a place where a number or chart will come from an experiment that has not run yet.
+// Nothing inside this box is a result.
+interface Props { experiment: string; }
+const { experiment } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<div class="pending">
+  <strong>Result pending.</strong> This will be filled in from <a href={`${base}/experiments/${experiment.toLowerCase()}/`}>Experiment {experiment}</a> once it has run. <slot />
+</div>

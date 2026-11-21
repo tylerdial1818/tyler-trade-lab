@@ -1,0 +1,60 @@
+---
+title: Models and data
+number: 3
+summary: Whether a better model or better data matters more depends on how much signal there is to find. In markets, my bet is on the data.
+drafted: 2026-11-20
+status: draft
+---
+import Note from '../../components/Note.astro';
+import Pending from '../../components/Pending.astro';
+
+There is an argument that comes up in almost every data science team: should the next month go to a better model or to better data? Both sides have good evidence. I think the answer depends on one thing that is easy to estimate and often ignored, which is how much signal there is in the problem to begin with.
+
+## The case for data
+
+In 2001, Michele Banko and Eric Brill tested several learning algorithms on a language task and found that simply giving each one far more training data improved all of them more than switching between them did.<Note>Michele Banko and Eric Brill, "Scaling to Very Very Large Corpora for Natural Language Disambiguation," 2001.</Note> Eight years later, three Google researchers made the point more broadly in an essay titled "The Unreasonable Effectiveness of Data."<Note>Alon Halevy, Peter Norvig and Fernando Pereira, *IEEE Intelligent Systems* 24(2), 2009.</Note> Richard Sutton's "The Bitter Lesson" extended it again: across decades of AI research, general methods that can absorb more data and computation have beaten methods built on clever human insight.<Note>Richard Sutton, "The Bitter Lesson," 2019.</Note>
+
+## The case for simple models
+
+Forecasting has a different record. Since the 1980s, Spyros Makridakis has run open competitions in which teams forecast thousands of real time series. Over and over, simple statistical methods and averages of several simple methods have been hard to beat. In the M4 competition in 2018, the pure machine learning entries mostly did worse than standard statistical benchmarks. The winner was a hybrid that combined a classical method with a neural network.<Note>Spyros Makridakis, Evangelos Spiliotis and Vassilios Assimakopoulos, "The M4 Competition: 100,000 time series and 61 forecasting methods," *International Journal of Forecasting* 36(1), 2020.</Note>
+
+Leo Breiman described a related split in 2001.<Note>Leo Breiman, "Statistical Modeling: The Two Cultures," *Statistical Science* 16(3), 2001.</Note> One culture assumes a simple model of how the data was generated and estimates it. The other treats the process as unknown and judges models only by how well they predict. Breiman argued for the second. But the second culture works best where there is a great deal of data and a stable relationship to learn.
+
+## Reconciling them
+
+These two records do not contradict each other. They come from problems with very different amounts of signal.
+
+Language and images have enormous amounts of structure and nearly unlimited examples. A flexible model has plenty to learn and enough data to learn it without memorizing noise. Better models and more data both help, and more data helps most.
+
+Economic and market forecasting is the opposite. There is little structure relative to the noise, the relationships drift over time, and the number of truly independent examples is small. Weekly jobless claims produce 52 observations a year. A flexible model in that setting has more freedom than the data can discipline, and it spends that freedom fitting accidents.
+
+So the rule I use is this: the less signal and the fewer independent examples, the simpler the model should be, and the more the result depends on the quality of the data rather than the cleverness of the method.
+
+## What "better data" means here
+
+In the experiments on this site, better data rarely means more rows. It usually means:
+
+- Data that records when it became public, so the model only sees what was knowable at the time.
+- The first reported value of a statistic, not the revised value published weeks later.
+- Events matched correctly, so that three contracts on the same underlying question count as one observation and not three.
+- Prices and order books recorded as they were, not reconstructed afterward.
+
+Most of the code behind this site does that work. It is not glamorous, and it is where most of the results are won or lost. A sophisticated model trained on data with a timing leak will look excellent and be worthless.
+
+## How I test it
+
+Every experiment compares the same four forecasts, described on the [method page](../../method/): the market price alone, a simple baseline, the baseline plus a new data source, and a more flexible model given the same data. The difference between the second and third tells me what the data added. The difference between the third and fourth tells me what the model added.
+
+<Pending experiment="A">
+Model ladder for Kalshi pricing: how much accuracy each step adds over the market price.
+</Pending>
+
+<Pending experiment="B">
+Model ladder for weekly jobless claims.
+</Pending>
+
+<Pending experiment="C">
+Model ladder for insider purchases and later stock returns.
+</Pending>
+
+My expectation going in is that the data step will matter more than the model step in all three, and that in at least one of them neither step will beat the market price. I am writing that down now so that it can be checked later.

@@ -1,0 +1,49 @@
+id: A
+title: Kalshi price calibration
+status: draft
+claim: Forecast
+question: >
+  Do low-priced Kalshi contracts pay out less often than their prices imply, and is the
+  difference larger than the fee?
+hypothesis: >
+  YES contracts priced at 10 cents or less 24 hours before close pay out less often than
+  their price, so buying NO on them has positive expected value after the taker fee.
+reason: >
+  The favorite-longshot bias is well documented in betting markets. Small Kalshi markets
+  may not attract enough capital to correct it.
+data:
+  source: Kalshi public market data API (settled markets, candlesticks with bid and ask)
+  rights: Kalshi Developer Agreement and data terms must be reviewed before collection.
+  universe: All binary markets that settled YES or NO, excluding voided or disputed markets.
+  price_measure: YES ask and bid at the last candle at or before close minus 24 hours.
+  exclusions:
+    - No two-sided quote in the 6 hours before the measurement time.
+    - Markets whose fee schedule for the date is unknown.
+  unit_of_analysis: Event. Multiple markets in one event are averaged within the event.
+split:
+  exploration: Earliest 60 percent of events by close date.
+  test: Latest 40 percent, examined once after this spec is registered.
+models:
+  - Market price alone (YES midpoint as probability).
+  - Price plus a calibration curve fitted on the exploration period.
+  - Calibration curve with category and days-to-close as covariates.
+metrics:
+  primary: >
+    Mean net value per NO contract bought at (1 - YES bid) with the taker fee applied, for
+    YES bids of 10 cents or less, clustered by event.
+  secondary:
+    - Reliability diagram by 5-cent price bucket.
+    - Brier score of each model relative to the market price.
+decision_rule: Buy one NO contract whenever the YES bid is 10 cents or less at the measurement time.
+test: One-sided, event-clustered bootstrap, 95 percent level.
+power: >
+  Payoff standard deviation about 0.3 per contract. To detect 2 cents per contract at 80
+  percent power needs about 1,400 independent events in the test period.
+outcomes:
+  positive: Lower bound of the 95 percent interval on net value is above zero in the test period.
+  null: Test period has at least 1,400 events and the interval excludes 2 cents.
+  inconclusive: Fewer than 1,400 qualifying events.
+  killed: Bid and ask history is unavailable or the data terms do not permit the analysis.
+limits: >
+  Historical candles show quoted prices, not the size available at them. A positive result
+  here is a Forecast claim only. An Execution claim requires forward-recorded order books.

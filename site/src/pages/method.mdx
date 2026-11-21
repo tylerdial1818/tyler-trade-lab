@@ -1,0 +1,122 @@
+---
+layout: ../layouts/Prose.astro
+title: Method
+description: The six steps every experiment on this site goes through, and what they cannot do.
+meta: Drafted 2026-11-20
+---
+import Note from '../components/Note.astro';
+
+Every experiment on this site goes through the same six steps. This page explains each step, why it is there, and where it stops working. It starts with how a professional trading firm approaches a strategy, because the differences between that and what I do here are mostly about constraints, not cleverness.
+
+## How a trading firm approaches a strategy
+
+A systematic trading firm looks for a repeatable source of return. It estimates that return on historical data, checks it on data the estimate never saw, models what it will cost to trade, sizes the position against everything else it holds, and watches the return shrink as competitors find the same thing. Its advantages are speed, proprietary data, execution, cheap financing and scale.
+
+Good firms already do the things this site cares about. They think about mechanisms, test out of sample, and distrust backtests that look too good. They do it with more data and more people than I have. I am not claiming to have found something they missed.
+
+## What is different here
+
+The difference is in the constraints and the goal. I have no speed advantage, very little capital and no private data. I also have no obligation to make money, so the goal is to find out what is true. Those two facts change almost every decision.
+
+<div class="table-wrap">
+
+| | A systematic trading firm | This lab |
+| --- | --- | --- |
+| Goal | Risk-adjusted profit at scale | Knowing what is true; profit is one test of it |
+| Where an edge comes from | Speed, execution, private data, scale | Markets too small for a firm to bother with, patience, careful use of public data |
+| Capacity needed | Millions of dollars per strategy | A few hundred dollars is enough to learn something |
+| Failed ideas | Dropped quietly | Published, with the reason they failed |
+| Methods | Secret, because an edge decays when shared | Public, because the point is to teach |
+| How success is judged | Profit and loss, Sharpe ratio, drawdown | Accuracy against the market price, honest net value after costs, and tests large enough to detect a real effect |
+| Biggest risk | Crowding and regime change | Fooling myself with small samples |
+
+</div>
+
+In practice this means three things. I work mostly in prediction markets on [Kalshi](https://kalshi.com), where many contracts trade only a few thousand dollars and no large firm can make the effort pay. I only test ideas on horizons of hours to weeks, where reacting a few seconds late costs nothing. And every result is published, including the ones that do not work.
+
+## Step 1. Read the price
+
+Before asking whether I can predict something, I ask what the market already predicts. A Kalshi contract pays $1 if an event happens and nothing if it does not, so a price of 23 cents is roughly a 23 percent forecast. That forecast is the benchmark for everything that follows. A model that cannot beat the price has learned nothing the market did not already know.
+
+The price is not exactly a probability.<Note>Wolfers and Zitzewitz, "Prediction Markets," *Journal of Economic Perspectives* 18(2), 2004, is a readable introduction to when prices behave like probabilities and when they do not.</Note> Fees, the way traders feel about long shots, and thin trading all push it around. How far it is pushed, and in which direction, is itself the subject of [Experiment A](../experiments/a/).
+
+## Step 2. Find what the price might miss
+
+The obvious way to look for a signal is to collect as many data sources as possible and test which ones predict the outcome. That method almost always finds something, and what it finds is usually noise. Gelman and Loken call it the garden of forking paths: every choice of variable, window and threshold is another chance for chance to look like a result.<Note>Andrew Gelman and Eric Loken, "The garden of forking paths," 2013.</Note>
+
+So each experiment starts with a reason the market could be wrong before it starts with data. Some reasons I take seriously:
+
+- Few informed people trade a particular contract, so the price reflects whoever happens to show up.
+- A piece of public information arrives on a fixed schedule, and the market may not fully absorb it in time.
+- A known behavioral pattern, such as overpaying for long shots, survives because correcting it does not pay enough for anyone large.
+
+Only after the reason is written down do I go and get the data.
+
+## Step 3. Check when it was knowable
+
+Most backtests that look too good are using information from the future. The leak is usually small and easy to miss: a number that was revised after the fact, a timestamp that records when a page was last edited instead of when it was first published, or a daily close that was not available at the time the trade was supposedly made.
+
+Every observation here carries two clocks: when it became public, and when my code received it. A forecast may only use an observation if both clocks are at or before the decision time. If I do not know when something became public, the code treats it as unavailable.
+
+Weekly initial jobless claims are a good example. The Department of Labor releases them on Thursday at 8:30 a.m. Eastern, and they are revised a week later. A model that predicts Wednesday's market price using the revised number is using information that did not exist on Wednesday.
+
+Only after the timing is right does it make sense to ask whether one series leads another. Even then, a statistical lead is not enough. If a signal leads the price by thirty seconds and I can only act every five minutes, it is useless to me.
+
+## Step 4. Ask why it should work
+
+A pattern with no explanation is the kind most likely to disappear. Relationships that come from a mechanism tend to keep holding when conditions change. Correlations that do not have one tend to weaken once people start trading on them. Economists know a version of this as the Lucas critique, and the more general idea as Goodhart's law: a measure that becomes a target stops being a good measure.<Note>Robert Lucas, "Econometric Policy Evaluation: A Critique," 1976. Charles Goodhart stated his version in 1975.</Note>
+
+That is the main reason a forecaster should care about causes. It is not to pull levers. Nothing I do changes how many people file for unemployment or what a film critic writes, so there are no levers to pull. The point is to tell the difference between a relationship that is likely to last and one that is likely to fade.
+
+Causal inference tools are useful here in two specific ways:
+
+- **Event studies around scheduled releases.** When a government statistic comes out at a fixed time, the timing of the news is set in advance and is not caused by anything happening in the market. That makes it possible to measure how prices respond to the surprise in the number, and how fast.
+- **Finding where an effect lives.** Methods such as double machine learning and causal forests can show whether a relationship is stronger for some kinds of events than others. Without a design that rules out confounding, these are careful descriptions of conditional patterns, and I report them that way.
+
+## Step 5. Forecast and decide
+
+Forecasts here are probabilities, because the outcomes are uncertain. A forecast of 70 percent that comes true is not proof it was right, and one that fails is not proof it was wrong. What can be checked is whether my 70 percent forecasts come true about 70 percent of the time, and whether my forecasts are closer to the outcomes than the market's. I measure that with the Brier score and the log score, the standard scoring rules for probability forecasts.<Note>Glenn Brier, "Verification of forecasts expressed in terms of probability," *Monthly Weather Review*, 1950.</Note>
+
+The decision rule, on the other hand, is fixed and written down before any test. For example: buy a contract only if my forecast exceeds the ask price plus the fee by at least three cents. Fixing it in advance keeps me from deciding after the fact which trades count.
+
+Each experiment compares the same sequence of models:
+
+1. The market price alone.
+2. A simple baseline that uses only the obvious information.
+3. The baseline plus the new data source being tested.
+4. A more flexible model using the same data.
+
+If step 3 beats step 2, the data added something. If step 4 beats step 3, the model added something. With a few hundred events, simple models usually win, and when they do I report that.
+
+## Step 6. Test it honestly
+
+Each test is specified in a file committed to this site's public repository before I look at the data it will be judged on. The file states the hypothesis, the number of events, the scoring rule, the decision rule and what would count as failure. The commit timestamp is the proof that it came first.
+
+The size of the test matters more than the sophistication of the model. To detect an average edge of a few cents on contracts that pay $0 or $1, a test needs hundreds to thousands of independent events. Several contracts on the same underlying event count as one event, not several. When a test is too small to detect anything, I say so rather than reporting a result.
+
+Simulated trades are only as honest as the assumptions about filling them. Historical prices can support a claim about forecasting. They cannot support a claim about trading, because they do not show how many contracts were actually available at that price. Claims about execution use order books recorded live, going forward, with a delay before each simulated order, the full published fee, and only the size that was actually there.
+
+Every result is labeled with what it claims:
+
+- **Forecast:** my probabilities were more accurate than the market's.
+- **Market response:** prices moved in a measurable way after a piece of news.
+- **Execution:** a fixed trading rule would have made money after costs at a realistic size.
+
+A good forecast can fail the execution test, and a price response does not by itself show cause. Keeping the labels separate stops one kind of result from being read as another.
+
+Each experiment ends in one of four states:
+
+- **Positive:** the effect is above zero with 95 percent confidence on data the model never saw.
+- **Null:** the test was large enough to detect the effect I expected, and found nothing that size.
+- **Inconclusive:** the test was too small to say. More data is needed.
+- **Killed:** a flaw in the data or the design means the question could not be answered as posed.
+
+## What this method cannot do
+
+It cannot show that a strategy will keep working. A positive result says something about the period tested and nothing guaranteed about the next one.
+
+It cannot find edges that depend on speed or on information that is not public. Those exist, and they belong to people with different resources.
+
+It works in small markets, so any edge it finds will be small in dollars even if it is real.
+
+And it can only make causal claims where the design supports them. Most of the time, the honest description is a careful one: under these conditions, this information was associated with this outcome, measured at a time when I could have known it.

@@ -1,0 +1,50 @@
+id: B
+title: Weekly jobless claims
+status: draft
+claim: Forecast; Market response
+question: >
+  Can public information available before 8:30 a.m. Eastern on Thursday forecast the first
+  print of initial jobless claims better than Kalshi's price, and how fast does the price
+  absorb the release?
+hypothesis:
+  forecast: >
+    A model using prior first prints and seasonal patterns is no better than the market
+    price one hour before the release. Adding state layoff notices improves it.
+  response: >
+    The market midpoint moves in the direction of the surprise within 5 minutes of the
+    release and does not drift further over the following hour.
+reason: >
+  The release time is fixed in advance, so the timing of the news is not caused by anything
+  in the market. That makes the price response measurable without confounding from timing.
+data:
+  outcome: First-reported seasonally adjusted initial claims, from the Department of Labor release archive.
+  vintages: ALFRED vintage series ICSA for first prints.
+  layoff_notices: State WARN notices, deduplicated, by publication date. Optional; added only if coverage can be documented.
+  market: Kalshi weekly claims markets; candles and forward-recorded order books.
+  rights: Kalshi data terms must be reviewed before collection.
+  unit_of_analysis: Release week.
+split:
+  exploration: Release weeks before 2025-07-01.
+  test: Release weeks from 2025-07-01 onward.
+models:
+  - Market midpoint 60 minutes before release.
+  - Last first print plus a seasonal adjustment fitted on the exploration period.
+  - The previous model plus layoff notices published before the decision time.
+  - A regularized model with the same inputs.
+metrics:
+  forecast: Paired difference in Brier score against the market, by release week, block bootstrap.
+  response: >
+    Event-study path of the midpoint from 30 minutes before to 60 minutes after release,
+    against the surprise relative to the market-implied median, with placebo times on
+    non-release Thursdays.
+power: >
+  About 52 release weeks per year. Enough to detect a large forecast improvement or a clear
+  price response. Not enough to support any claim about trading profit.
+outcomes:
+  positive: Interval on the Brier improvement or on the 5-minute response excludes zero in the test period.
+  null: Interval includes zero with at least 40 test weeks.
+  inconclusive: Fewer than 40 test weeks or too few quoted markets.
+  killed: Kalshi data terms do not permit the analysis, or first prints cannot be dated.
+limits: >
+  No Execution claim. The response analysis needs order books recorded live from now on;
+  historical candles are too coarse to measure a 5-minute response.

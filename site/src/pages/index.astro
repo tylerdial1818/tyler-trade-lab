@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const experiments = (await getCollection('experiments')).sort((a, b) => a.data.code.localeCompare(b.data.code));
+const essays = (await getCollection('essays')).sort((a, b) => a.data.number - b.data.number);
+---
+<Base title="Tyler Trade Labs">
+  <div class="column">
+    <h1>Tyler Trade Labs</h1>
+    <p class="lede">
+      When can data tell you something a market does not already know? This site is a lab notebook
+      about that question. Each experiment is a small, pre-registered test against real prediction
+      markets and stock data. The essays are about what those tests say about prediction in general.
+    </p>
+    <p>
+      I am not selling a strategy. Most ideas tested here are expected to fail, and the failures stay
+      on the site. The <a href={`${base}/method/`}>method page</a> explains how every test is set up
+      and judged.
+    </p>
+
+    <h2>Experiments</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Code</th><th>Question</th><th>Claim</th><th>Status</th><th>Result</th></tr>
+        </thead>
+        <tbody>
+          {experiments.map((e) => (
+            <tr>
+              <td class="status">{e.data.code}</td>
+              <td><a href={`${base}/experiments/${e.id}/`}>{e.data.question}</a></td>
+              <td>{e.data.claim}</td>
+              <td class="status">{e.data.status}</td>
+              <td>{e.data.verdict}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Essays</h2>
+    <ol>
+      {essays.map((e) => (
+        <li><a href={`${base}/essays/${e.id}/`}>{e.data.title}</a>. {e.data.summary}</li>
+      ))}
+    </ol>
+  </div>
+</Base>

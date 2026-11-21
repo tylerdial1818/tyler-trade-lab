@@ -1,0 +1,45 @@
+---
+title: Kalshi price calibration
+code: A
+question: Do cheap Kalshi contracts pay out less often than their prices imply, by more than the fee?
+claim: Forecast
+status: Draft
+spec: specs/A-kalshi-price-calibration.yaml
+verdict: Not yet run
+---
+
+## Question
+
+A YES contract on Kalshi priced at 8 cents implies roughly an 8 percent chance. If contracts at that price actually pay out 5 percent of the time, then buying the opposite side is a good bet, as long as the fee does not take the difference.
+
+## Price
+
+The benchmark is the market's own price 24 hours before each market closes, read as a probability.
+
+## Reason
+
+At racetracks, long shots have been overpriced for as long as anyone has measured. Bettors pay a premium for a small chance at a large payout. Kalshi lists thousands of small markets that no large firm has a reason to trade, so a similar pattern might survive there. See [Prices as forecasts](../../essays/prices-as-forecasts/).
+
+## Timing
+
+Each price is the last quote at or before 24 hours before close. The outcome is the official settlement. No information from after the measurement time is used.
+
+## Mechanism
+
+This is a behavioral explanation, not a causal design. The experiment measures whether the pattern exists and survives costs. It does not test why.
+
+## Forecast
+
+Three forecasts are compared on the same events: the market price, the price corrected by a calibration curve fitted on earlier data, and the same curve with market category and time to close added.
+
+## Test
+
+The full specification is in [the pre-registration](https://github.com/tylerdial1818/tyler-trade-lab/blob/main/specs/A-kalshi-price-calibration.yaml). The earliest 60 percent of events are used to explore. The latest 40 percent are examined once. Multiple contracts on the same event count as one observation. Detecting an edge of 2 cents per contract needs about 1,400 events in the test period.
+
+## Result
+
+Not yet run.
+
+## Limitations
+
+Historical data shows quoted prices but not how many contracts were available at them. A positive result here would show that prices are miscalibrated, not that the difference could be traded. Testing that needs order books recorded from now on.

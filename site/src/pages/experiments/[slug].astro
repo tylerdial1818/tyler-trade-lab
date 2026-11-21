@@ -1,0 +1,31 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const items = await getCollection('experiments');
+  return items.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const repo = 'https://github.com/tylerdial1818/tyler-trade-lab/blob/main/';
+---
+<Base title={`${d.code}. ${d.title}`} description={d.question}>
+  <article class="column">
+    <h1>{d.code}. {d.title}</h1>
+    <div class="table-wrap">
+      <table>
+        <tbody>
+          <tr><th>Question</th><td>{d.question}</td></tr>
+          <tr><th>Claim type</th><td>{d.claim}</td></tr>
+          <tr><th>Status</th><td class="status">{d.status}</td></tr>
+          <tr><th>Registered</th><td>{d.registered ? d.registered.toISOString().slice(0, 10) : 'Not yet'}</td></tr>
+          <tr><th>Specification</th><td><a href={repo + d.spec}>{d.spec}</a></td></tr>
+          <tr><th>Result</th><td>{d.verdict}</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <Content />
+  </article>
+</Base>
