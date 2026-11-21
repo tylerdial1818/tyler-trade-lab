@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const essays = await getCollection('essays');
+  return essays.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const fmt = (d: Date) => d.toISOString().slice(0, 10);
+---
+<Base title={entry.data.title} description={entry.data.summary}>
+  <article class="column">
+    <h1>{entry.data.title}</h1>
+    <p class="meta">
+      Essay {entry.data.number} · Drafted {fmt(entry.data.drafted)}
+      {entry.data.revised && ` · Revised ${fmt(entry.data.revised)}`}
+      {entry.data.status === 'draft' && ' · Draft'}
+    </p>
+    <Content />
+  </article>
+</Base>

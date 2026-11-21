@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const experiments = (await getCollection('experiments')).sort((a, b) => a.data.code.localeCompare(b.data.code));
+---
+<Base title="Experiments">
+  <div class="column">
+    <h1>Experiments</h1>
+    <p class="meta">Every experiment follows the same six steps described on the <a href={`${base}/method/`}>method page</a>, and every result is published, including nulls.</p>
+    {experiments.map((e) => (
+      <section>
+        <h2><a href={`${base}/experiments/${e.id}/`}>{e.data.code}. {e.data.title}</a></h2>
+        <p>{e.data.question}</p>
+        <p class="meta">{e.data.claim} · {e.data.status}</p>
+      </section>
+    ))}
+  </div>
+</Base>
